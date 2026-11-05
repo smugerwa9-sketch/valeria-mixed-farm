@@ -141,6 +141,7 @@ Deno.serve(async (req: Request) => {
     const targetId = String(body.user_id ?? "");
     const active = body.active === true;
     if (!targetId) return json({ error: "Choose a farm account." }, 400);
+    if (targetId === user.id && !active) return json({ error: "You cannot deactivate your own administrator account." }, 400);
     const { data: target, error: targetError } = await admin
       .from("farm_members")
       .select("role, active")
