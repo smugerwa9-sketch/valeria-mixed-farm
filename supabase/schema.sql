@@ -103,9 +103,4 @@ create policy farm_state_update_member
     )
   );
 
-insert into public.farm_bootstrap (singleton, admin_email)
-values (true, 'smugerwa9@gmail.com')
-on conflict (singleton) do update
-  set admin_email = excluded.admin_email
-  where public.farm_bootstrap.claimed_user_id is null;
-
+-- Add the allowlisted first administrator email privately after project creation.
