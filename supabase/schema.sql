@@ -77,6 +77,7 @@ create policy farm_state_insert_member
         and m.active = true
         and m.must_change_password = false
     )
+    and updated_by = (select auth.uid())
   );
 
 drop policy if exists farm_state_update_member on public.farm_state;
@@ -101,6 +102,7 @@ create policy farm_state_update_member
         and m.active = true
         and m.must_change_password = false
     )
+    and updated_by = (select auth.uid())
   );
 
 -- Add the allowlisted first administrator email privately after project creation.
