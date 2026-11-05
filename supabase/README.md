@@ -6,7 +6,7 @@ This directory contains the Supabase schema and Edge Functions used by the Valer
 
 1. Create a dedicated Supabase organization and a project named Valeria Mixed Farm.
 2. Apply `schema.sql` to that project.
-3. Privately insert the owner-approved first administrator email into `public.farm_bootstrap`. Do not commit that email to this public repository.
+3. Privately insert the owner-approved first administrator email into `public.farm_bootstrap` with `insert into public.farm_bootstrap (singleton, admin_email) values (true, 'approved-address') on conflict (singleton) do update set admin_email = excluded.admin_email where public.farm_bootstrap.claimed_user_id is null;`. Substitute the approved address in the Supabase SQL editor. Do not commit that email to this public repository.
 4. Add the GitHub Pages site URL to Supabase Auth's allowed redirect URLs for email confirmation and password recovery.
 5. Deploy `bootstrap-farm-admin`, `farm-admin-users`, and `farm-change-password` with JWT verification enabled.
 6. Put only the project's URL and publishable key in the public app. Keep the secret key in Supabase Edge Function environment variables.
