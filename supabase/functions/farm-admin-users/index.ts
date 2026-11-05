@@ -1,12 +1,8 @@
-import { createClient } from "npm:@supabase/supabase-js@2.119.0";
+import { createClient, corsHeaders as sdkCorsHeaders } from "npm:@supabase/supabase-js@2.119.0/cors";
+import { createClient as createSupabaseClient } from "npm:@supabase/supabase-js@2.119.0";
 
 const origin = "https://smugerwa9-sketch.github.io";
-const corsHeaders = {
-  "Access-Control-Allow-Origin": origin,
-  "Access-Control-Allow-Headers": "authorization, apikey, x-client-info, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Vary": "Origin",
-};
+const corsHeaders = { ...sdkCorsHeaders, "Access-Control-Allow-Origin": origin, "Vary": "Origin" };
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
@@ -27,12 +23,12 @@ Deno.serve(async (req: Request) => {
   const secret = keys("SUPABASE_SECRET_KEYS").default ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!url || !publishable || !secret) return json({ error: "Server authentication is not configured." }, 500);
 
-  const caller = createClient(url, publishable, { auth: { persistSession: false, autoRefreshToken: false } });
+  const caller = createSupabaseClient(url, publishable, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data: userData, error: userError } = await caller.auth.getUser(accessToken);
   const user = userData.user;
   if (userError || !user) return json({ error: "Your sign-in session is invalid." }, 401);
 
-  const admin = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
+  const admin = createSupabaseClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data: membership, error: membershipError } = await admin
     .from("farm_members")
     .select("role, active, must_change_password")
