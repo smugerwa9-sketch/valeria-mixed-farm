@@ -1,4 +1,4 @@
-import { createClient, corsHeaders as sdkCorsHeaders } from "npm:@supabase/supabase-js@2.119.0/cors";
+import { corsHeaders as sdkCorsHeaders } from "npm:@supabase/supabase-js@2.119.0/cors";
 import { createClient as createSupabaseClient } from "npm:@supabase/supabase-js@2.119.0";
 
 const origin = "https://smugerwa9-sketch.github.io";
